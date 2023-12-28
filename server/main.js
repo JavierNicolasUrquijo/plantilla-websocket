@@ -12,6 +12,7 @@ app.use(express.static("public"));
 // 	res.send("Página principal");
 // });
 
+// Sockets ********************************************************
 io.on("connection", (socket) => {
 	// console.log("conexión establecida");
 	socket.on("client-message", (data) => {
@@ -33,7 +34,7 @@ io.on("connection", (socket) => {
 		io.sockets.emit("status", statusbtnsync);
 	});
 });
-
+// Funciones *******************************************************
 function btnsyncpressed() {
 	io.sockets.emit("messages", mensajes);
 	statusbtnsync = "btn-sync-true";
