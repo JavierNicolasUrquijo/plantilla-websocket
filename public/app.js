@@ -19,18 +19,20 @@
 // 	document.getElementById("console").appendChild(element);
 // });
 
-const socket = io.connect("http://localhost:8080", { forceNew: true });
 consola = [];
+
+// Sockets ********************************************************
+const socket = io.connect("http://localhost:8080", { forceNew: true });
 
 window.onload = function () {
 	socket.emit("status", "status");
 };
 
 socket.on("messages", (event) => {
-	console.log(event);
-	// consola.push(event);
-	console.log("datos almacenados: " + consola);
-	document.getElementById("console").innerHTML = event.join("<BR>");
+	console.log("Evento recibido: " + event);
+	consola.push(event);
+	console.log("Datos en consola: " + consola);
+	document.getElementById("console").innerHTML = consola.join("<BR>");
 });
 
 socket.on("status", (event) => {
@@ -43,8 +45,7 @@ socket.on("status", (event) => {
 	}
 });
 
-//--------------------------------------------------------------------------------------------------------------------
-
+// Funciones ********************************************************
 document.getElementById("btn-sync").addEventListener("click", () => {
 	// console.log("botón sync presionado");
 	document.getElementById("btn-sync").disabled = true;
@@ -53,8 +54,9 @@ document.getElementById("btn-sync").addEventListener("click", () => {
 
 document.getElementById("btn-clear").addEventListener("click", () => {
 	// console.log("botón clear presionado");
-	document.getElementById("console").innerHTML = "";
-	socket.emit("client-message", "btn-clear-pressed");
+	consola.length = 0;
+	document.getElementById("console").innerHTML = consola;
+	// socket.emit("client-message", "btn-clear-pressed");
 });
 
 document.getElementById("btn-aux").addEventListener("click", () => {

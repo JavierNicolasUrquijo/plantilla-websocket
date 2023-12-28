@@ -17,7 +17,7 @@ io.on("connection", (socket) => {
 	// console.log("conexión establecida");
 	socket.on("client-message", (data) => {
 		console.log(data);
-		mensajes.push(data);
+		mensajes = data;
 		if (data == "btn-sync-pressed") {
 			btnsyncpressed();
 		}
@@ -27,43 +27,40 @@ io.on("connection", (socket) => {
 		if (data == "btn-aux-pressed") {
 			btnauxpressed();
 		}
-
-		// socket.emit("messages", mensajes); //Envia a un solo cliente
 	});
 	socket.on("status", (socket) => {
 		io.sockets.emit("status", statusbtnsync);
 	});
 });
+
 // Funciones *******************************************************
-function btnsyncpressed() {
+async function btnsyncpressed() {
+	// socket.emit("messages", mensajes); //Envia a un solo cliente
 	io.sockets.emit("messages", mensajes);
 	statusbtnsync = "btn-sync-true";
-	//Proceso de trabajo
+	io.sockets.emit("status", statusbtnsync);
+	//Añadir la lógica de funcionamiento
+	await contador(); //Lógica de prueba
 	statusbtnsync = "btn-sync-false";
 	io.sockets.emit("status", statusbtnsync);
 }
-function btnclearpressed() {
-	mensajes = [];
-	io.sockets.emit("messages", mensajes);
-}
-function btnauxpressed() {
-	io.sockets.emit("messages", mensajes);
-	contador();
-}
+function btnclearpressed() {}
 
-server.listen(8080, () => {
-	console.log("server on port 8080");
-});
+function btnauxpressed() {}
 
 async function contador() {
 	console.log("Estoy en la función contador");
 	for (let i = 0; i <= 10; i++) {
 		await sleep(1000);
-		mensajes.push(i);
-		io.sockets.emit("messages", mensajes);
+		io.sockets.emit("messages", i);
 	}
 }
 
 var sleep = function (ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 };
+
+// Servidor a la escucha *********************************************
+server.listen(8080, () => {
+	console.log("server on port 8080");
+});
