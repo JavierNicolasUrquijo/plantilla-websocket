@@ -38,9 +38,11 @@ socket.on("messages", (event) => {
 socket.on("status", (event) => {
 	// console.log("Enviado desde el servidor: " + event);
 	if (event == "btn-sync-false") {
+		document.getElementById("btn-sync").innerHTML = "Ejecuta app";
 		document.getElementById("btn-sync").disabled = false;
 	}
 	if (event == "btn-sync-true") {
+		document.getElementById("btn-sync").innerHTML = "Procesando";
 		document.getElementById("btn-sync").disabled = true;
 	}
 });
